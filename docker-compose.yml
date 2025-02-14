@@ -1,0 +1,22 @@
+services:
+  rust-server:
+    build:
+      context: .
+      args:
+        STEAMAPPID: ${STEAMAPPID}
+        STEAMAPPNAME: ${STEAMAPPNAME}
+    container_name: rust
+    volumes:
+      - ./rustdata:/rust  # Monta la carpeta 'rustdata' del host en /rust del contenedor
+    ports:
+      - "${SERVER_PORT}:28015/tcp"
+      - "${SERVER_PORT}:28015/udp"
+      - "28016:28016/udp"
+    environment:
+      SERVER_PORT: ${SERVER_PORT}
+      SERVER_IDENTITY: ${SERVER_IDENTITY}
+      SERVER_SEED: ${SERVER_SEED}
+      SERVER_WORLDSIZE: ${SERVER_WORLDSIZE}
+      SERVER_MAXPLAYERS: ${SERVER_MAXPLAYERS}
+      SERVER_SAVEINTERVAL: ${SERVER_SAVEINTERVAL}
+    restart: unless-stopped
