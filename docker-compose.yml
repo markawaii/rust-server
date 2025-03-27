@@ -1,13 +1,13 @@
 services:
   rust-server:
     build:
-      context: .
+      context: ./rust-server
       args:
         STEAMAPPID: ${STEAMAPPID}
         STEAMAPPNAME: ${STEAMAPPNAME}
     container_name: rust
     volumes:
-      - ./rustdata:/rust  # Monta la carpeta 'rustdata' del host en /rust del contenedor
+      - ./rustdata:/rust
     ports:
       - "${SERVER_PORT}:28015/tcp"
       - "${SERVER_PORT}:28015/udp"
@@ -19,4 +19,17 @@ services:
       SERVER_WORLDSIZE: ${SERVER_WORLDSIZE}
       SERVER_MAXPLAYERS: ${SERVER_MAXPLAYERS}
       SERVER_SAVEINTERVAL: ${SERVER_SAVEINTERVAL}
+      RCON_PASSWORD: ${RCON_PASSWORD}
+    restart: unless-stopped
+
+  rust-panel:
+    build:
+      context: ./panel
+    container_name: rust-panel
+    ports:
+      - "8080:80"
+    environment:
+      RCON_HOST: rust
+      RCON_PORT: 28016
+      RCON_PASSWORD: ${RCON_PASSWORD}
     restart: unless-stopped
